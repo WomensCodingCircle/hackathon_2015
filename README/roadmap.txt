@@ -1,0 +1,33 @@
+def getNeuronNames():
+	#contacts DVID
+	return list of neurons
+	
+def processNeuronsRequest(request):
+	return json data for svg creation
+	
+def getInputsOutputs(neuronID):
+	returns all inputs and outputs from one neuron
+	
+def getBodyIds(neuron/typeName):
+	#contacts dvid
+	returns list of ids corresponding to neuron or type name
+
+def filterInputsOutputs(listOfNeurons, inputsOutputs):
+	returns inputs and outputs that connect to neurons in listOfNeurons
+	
+def generateEdgeList(listOfNeurons):
+	#uses filterInputsOutputs and getBodyIds to generate a list of connections for svg
+	returns list of connections for svg
+
+def combineOutputs(nodes, celltypes, edges, combinationType):
+	combines nodes by cell type and calculates inputs and outputs base on combo type (mean, sum, etc.)
+	returns nodes, edges 
+	
+We can revise the format of input and output as we go. We will probably need to add more 
+functions, and you can break your functions down into subfunctions if you would like.
+
+Only getNeuronNames, and processNeuronsRequest, should actually have routes to go to the website,
+the rest are helper functions.
+
+I got what data I could into DVID, but if we need something different we can adapt.
+
