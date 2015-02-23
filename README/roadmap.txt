@@ -6,6 +6,7 @@ def processNeuronsRequest(request):
 	return json data for svg creation
 	
 def getInputsOutputs(neuronID):
+	#contacts DVID
 	returns all inputs and outputs from one neuron
 	
 def getBodyIds(neuron/typeName):
