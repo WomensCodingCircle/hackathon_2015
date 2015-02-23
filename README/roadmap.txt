@@ -3,9 +3,16 @@ def getNeuronNames():
 	return list of neurons
 	
 def processNeuronsRequest(request):
+	#request contains neuron names and ids
+	#generate list of body ids user is interested in (use getBodyIds)
+	#for each body id, call getInputsOutputs
+	#then call filterInputsOutputs to filter based on neuron list
+	#generateEdgeList()
+	#combineOutputs() based on what type of combination the user wants
 	return json data for svg creation
 	
 def getInputsOutputs(neuronID):
+	#ying
 	#contacts DVID
 	returns all inputs and outputs from one neuron
 	
@@ -14,6 +21,7 @@ def getBodyIds(neuron/typeName):
 	returns list of ids corresponding to neuron or type name
 
 def filterInputsOutputs(listOfNeurons, inputsOutputs):
+	#ying
 	returns inputs and outputs that connect to neurons in listOfNeurons
 	
 def generateEdgeList(listOfNeurons):
