@@ -1,0 +1,26 @@
+## Getting up to date
+#1. getting everyone's latest changes (DO THIS OFTEN)
+git pull origin master 
+
+#2. saving my changes on my personal computer
+git commit -am "Write what you changed here"
+
+#3. saving my changes to github
+#make sure you are up to date
+git pull origin master
+#sends your changes to the website
+git push origin master 
+
+#4. see if you've made any changes
+git status
+
+
+## Running your changes (w/o running the website)
+#from commandline 
+cd <where views.py lives>
+python #or ana or whatever command to open anaconda
+#you should now be in the python REPL 
+import views
+views.your_functions('inputs')
+
+
