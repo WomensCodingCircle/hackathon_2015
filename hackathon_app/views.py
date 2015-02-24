@@ -10,11 +10,18 @@ def simple_view(request):
 	my_template = 'hackathon_app/user_interface.html'
 	return render(request,my_template,{'today':today},context_instance=RequestContext(request))
 
-def getNeuronNames():
-	pass
-	#wendye, fang
-	#contacts DVID
-	#return list of neurons
+def NeuronNames():
+
+	# Open a connection to DVID
+	connection = httplib.HTTPConnection(server, timeout=5.0)
+
+	keys = kv.get_keys(connection, uuid, dataname)
+	
+
+	data_file = kv.get_value(connection, uuid, dataname, 'names.json')
+
+	NeuronNames = json.loads(data_file)
+	return NeuronNames
 	
 def processNeuronsRequest(request):
 	pass
