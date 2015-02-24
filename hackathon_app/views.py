@@ -10,16 +10,16 @@ def simple_view(request):
 	my_template = 'hackathon_app/user_interface.html'
 	return render(request,my_template,{'today':today},context_instance=RequestContext(request))
 
-def NeuronNames():
+def getNeuronNames():
 
 	# Open a connection to DVID
 	connection = httplib.HTTPConnection(server, timeout=5.0)
 
+	#get the names of files
 	keys = kv.get_keys(connection, uuid, dataname)
 	
-
+	#read file 'names.jason'
 	data_file = kv.get_value(connection, uuid, dataname, 'names.json')
-
 	NeuronNames = json.loads(data_file)
 	return NeuronNames
 	
