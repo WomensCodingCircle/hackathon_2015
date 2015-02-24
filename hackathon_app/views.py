@@ -17,7 +17,7 @@ def getNeuronNames():
 
 	#get the names of files
 	keys = kv.get_keys(connection, uuid, dataname)
-	
+
 	#read file 'names.jason'
 	data_file = kv.get_value(connection, uuid, dataname, 'names.json')
 	NeuronNames = json.loads(data_file)
