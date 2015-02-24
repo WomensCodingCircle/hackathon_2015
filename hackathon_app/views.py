@@ -4,6 +4,10 @@
 
 # Create your views here.
 
+server = "hackathon.janelia.org"
+uuid = '2a3'
+dataname = 'codingcircle'
+
 def simple_view(request):
 	today = timezone.now()
 	data_dictionary = {'today': today}
