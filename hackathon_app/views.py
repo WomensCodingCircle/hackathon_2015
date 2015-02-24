@@ -2,7 +2,18 @@
 #from django.utils import timezone
 #from django.template import RequestContext
 
-# Create your views here.
+# imports
+import httplib
+import json
+from os import path
+from glob import glob
+from pydvid import keyvalue as kv
+from pydvid import general
+
+#connect
+server = "hackathon.janelia.org"
+uuid = '2a3'
+dataname = 'codingcircle'
 
 def simple_view(request):
 	today = timezone.now()
