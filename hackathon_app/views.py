@@ -39,7 +39,7 @@ def getInputsOutputs(neuronID):
 	#contacts DVID
 	#returns all inputs and outputs from one neuron
 	
-def getBodyIds(neuron/typeName):
+def getBodyIds(neuron, typeName):
 	pass
 	#satako
 	#contacts dvid
