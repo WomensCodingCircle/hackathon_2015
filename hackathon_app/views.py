@@ -1,6 +1,6 @@
-from django.shortcuts import render
-from django.utils import timezone
-from django.template import RequestContext
+# from django.shortcuts import render
+#from django.utils import timezone
+#from django.template import RequestContext
 
 # Create your views here.
 
