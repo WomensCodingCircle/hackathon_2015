@@ -21,6 +21,7 @@ def getNeuronNames():
 	#read file 'names.jason'
 	data_file = kv.get_value(connection, uuid, dataname, 'names.json')
 	NeuronNames = json.loads(data_file)
+	NeuronNames.sort()
 	return NeuronNames
 	
 def processNeuronsRequest(request):
