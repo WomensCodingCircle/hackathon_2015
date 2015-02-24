@@ -10,6 +10,49 @@ def simple_view(request):
 	my_template = 'hackathon_app/user_interface.html'
 	return render(request,my_template,{'today':today},context_instance=RequestContext(request))
 
+def getNeuronNames():
+	pass
+	#wendye, fang
+	#contacts DVID
+	#return list of neurons
+	
+def processNeuronsRequest(request):
+	pass
+	#request contains neuron names and ids
+	#generate list of body ids user is interested in (use getBodyIds)
+	#for each body id, call getInputsOutputs
+	#then call filterInputsOutputs to filter based on neuron list
+	#generateEdgeList()
+	#combineOutputs() based on what type of combination the user wants
+	#return json data for svg creation
+	
+def getInputsOutputs(neuronID):
+	pass
+	#ying
+	#contacts DVID
+	#returns all inputs and outputs from one neuron
+	
+def getBodyIds(neuron/typeName):
+	pass
+	#satako
+	#contacts dvid
+	#returns list of ids corresponding to neuron or type name
+
+def filterInputsOutputs(listOfNeurons, inputsOutputs):
+	pass
+	#ying
+	#returns inputs and outputs that connect to neurons in listOfNeurons
+	
+def generateEdgeList(listOfNeurons):
+	pass
+	#lei-ann
+	#uses filterInputsOutputs and getBodyIds to generate a list of connections for svg
+	#returns list of connections for svg
+
+def combineOutputs(nodes, celltypes, edges, combinationType):
+	pass
+	#combines nodes by cell type and calculates inputs and outputs base on combo type (mean, sum, etc.)
+	#returns nodes, edges 
 
  
 	
