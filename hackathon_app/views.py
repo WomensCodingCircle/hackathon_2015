@@ -5,7 +5,6 @@ if debug == False:
     from django.utils import timezone
     from django.template import RequestContext
 
-
 # imports
 import httplib
 import json
@@ -14,32 +13,33 @@ from glob import glob
 from pydvid import keyvalue as kv
 from pydvid import general
 
-#connect
-server = "hackathon.janelia.org"
-uuid = '2a3'
-dataname = 'codingcircle'
-keys = ['inputs_output.json', 'names.json', 'names_to_body_id.json']
+def callDVID(keyname):
+    server = "hackathon.janelia.org"
+    uuid = '2a3'
+    dataname = 'codingcircle'
+    connection = httplib.HTTPConnection(server, timeout=30.0)
+    keys = kv.get_keys(connection, uuid, dataname)
+    if keyname not in keys:
+        print "Invalid key", keyname
+        return None
+    return kv.get_value(connection, uuid, dataname, keyname)
 
 def simple_view(request):
-	today = timezone.now()
-	data_dictionary = {'today': today}
-	my_template = 'hackathon_app/user_interface.html'
-	return render(request,my_template,{'today':today},context_instance=RequestContext(request))
+    today = timezone.now()
+    data_dictionary = {'today': today}
+    my_template = 'hackathon_app/user_interface.html'
+    return render(request,my_template,{'today':today},context_instance=RequestContext(request))
+
 
 def getNeuronNames():
+    data_file = callDVID('names.json')
+    NeuronNames = json.loads(data_file)
+    NeuronNames.sort()
+    return NeuronNames
 
-	# Open a connection to DVID
-	connection = httplib.HTTPConnection(server, timeout=5.0)
+getNeuronNames()
 
-	#get the names of files
-	keys = kv.get_keys(connection, uuid, dataname)
 
-	#read file 'names.jason'
-	data_file = kv.get_value(connection, uuid, dataname, 'names.json')
-	NeuronNames = json.loads(data_file)
-	NeuronNames.sort()
-	return NeuronNames
-	
 def processNeuronsRequest(request):
 	pass
 	#request contains neuron names and ids
@@ -59,12 +59,7 @@ if debug == True:
 #print json.dumps( dataset_details, indent=4 )
 
 def getInputsOutputs(neuronIDList):
-    # Open a connection to DVID
-    connection = httplib.HTTPConnection(server, timeout=5.0)
-    dataset_details = general.get_repos_info(connection)
-
-    #retrieve all neurons' inputs and outputs
-    inputs_outputs = kv.get_value(connection, uuid, dataname, keys[0])
+    inputs_outputs = callDVID('inputs_output.json')
     in_out_dict = json.loads(inputs_outputs)
 
     #select neurons neuronIDList, puts them in a new dictionary, and return the dictionary to caller
