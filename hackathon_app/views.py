@@ -51,7 +51,8 @@ def processNeuronsRequest(request):
 	#return json data for svg creation
 	
 #sample node list
-neuronIDList = ["16699", "18631", "22077", "31699", "50809"]
+if debug == True:
+    neuronIDList = ["16699", "18631", "22077", "31699", "50809"]
 
 
 
