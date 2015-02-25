@@ -14,6 +14,7 @@ from pydvid import general
 server = "hackathon.janelia.org"
 uuid = '2a3'
 dataname = 'codingcircle'
+keys = ['inputs_output.json', 'names.json', 'names_to_body_id.json']
 
 def simple_view(request):
 	today = timezone.now()
@@ -45,11 +46,81 @@ def processNeuronsRequest(request):
 	#combineOutputs() based on what type of combination the user wants
 	#return json data for svg creation
 	
-def getInputsOutputs(neuronID):
-	pass
-	#ying
-	#contacts DVID
-	#returns all inputs and outputs from one neuron
+#sample node list
+neuronIDList = ["16699", "18631", "22077", "31699", "50809"]
+
+#debug flag. In production set debug="False"
+debug = True
+
+#print json.dumps( dataset_details, indent=4 )
+
+def getInputsOutputs(neuronIDList):
+    # Open a connection to DVID
+    connection = httplib.HTTPConnection(server, timeout=5.0)
+    dataset_details = general.get_repos_info(connection)
+
+    #retrieve all neurons' inputs and outputs
+    inputs_outputs = kv.get_value(connection, uuid, dataname, keys[0])
+    in_out_dict = json.loads(inputs_outputs)
+
+    #select neurons neuronIDList, puts them in a new dictionary, and return the dictionary to caller
+    selected_nodes = {}
+    for key in neuronIDList:
+        thisNode = in_out_dict.get(key)
+        selected_nodes[key] = thisNode
+
+    return selected_nodes
+
+
+def filterInputsOutputs(neuronIDs, inputsOutputs):
+    #remove name
+    #remove inputs come from neurons not neuronIDs list
+    #remove outputs to neurons not in neuronIDs list
+    #returns inputs and outputs that connect to neurons in listOfNeurons
+
+    nodeIDs = inputsOutputs.keys();
+    for item in nodeIDs:
+        thisNode = inputsOutputs.get(item)
+
+        #filter input nodes
+        thisInputs = thisNode.get("inputs")
+        thisInputskey = thisInputs.keys()
+        print  item + ": Inputs all " + str(len(thisInputskey))
+        for inputNode in thisInputskey:
+            if (inputNode in neuronIDs):
+                continue
+            else:
+                del thisInputs[inputNode]
+        print  item + ": Inputs after filter " + str(len(thisInputs.keys()))
+
+         #filter input nodes
+        thisOutputs = thisNode.get("outputs")
+        thisOutputskey = thisOutputs.keys()
+        print  item + ": Outputs all " + str(len(thisOutputskey))
+        for outputNode in thisOutputskey:
+            if (outputNode in neuronIDs):
+                continue
+            else:
+                del thisOutputs[outputNode]
+        print  item + ": Outputs after filter " + str(len(thisOutputs.keys()))
+
+        #delete name
+        del thisNode["name"]
+
+    return inputsOutputs
+
+#test
+# Get data from DVID Server
+
+selectedNodes = {}
+try:
+    selectedNodes = getInputsOutputs(neuronIDList)
+except:
+    print "Unexpected error:", sys.exc_info()[0]
+
+trimmedInputsOutputs = filterInputsOutputs(neuronIDList, selectedNodes)
+
+print trimmedInputsOutputs
 	
 def getBodyIds(neuron, typeName):
 	pass
@@ -57,11 +128,7 @@ def getBodyIds(neuron, typeName):
 	#contacts dvid
 	#returns list of ids corresponding to neuron or type name
 
-def filterInputsOutputs(listOfNeurons, inputsOutputs):
-	pass
-	#ying
-	#returns inputs and outputs that connect to neurons in listOfNeurons
-	
+
 def generateEdgeList(listOfNeurons):
 	pass
 	#lei-ann
