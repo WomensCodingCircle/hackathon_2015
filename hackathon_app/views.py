@@ -50,10 +50,6 @@ def processNeuronsRequest(request):
 if debug == True:
     neuronIDList = ["16699", "18631", "22077", "31699", "50809"]
 
-
-
-#print json.dumps( dataset_details, indent=4 )
-
 def getInputsOutputs(neuronIDList):
     inputs_outputs = callDVID('inputs_output.json')
     in_out_dict = json.loads(inputs_outputs)
@@ -65,7 +61,6 @@ def getInputsOutputs(neuronIDList):
         selected_nodes[key] = thisNode
 
     return selected_nodes
-
 
 def filterInputsOutputs(neuronIDs, inputsOutputs):
     #remove name
@@ -107,15 +102,12 @@ def filterInputsOutputs(neuronIDs, inputsOutputs):
         del thisNode["name"]
 
     return inputsOutputs
-
-
 	
 def getBodyIds(neuron, typeName):
 	pass
 	#satako
 	#contacts dvid
 	#returns list of ids corresponding to neuron or type name
-
 
 def generateEdgeList(listOfNeurons):
 	pass
@@ -129,7 +121,6 @@ def combineOutputs(nodes, celltypes, edges, combinationType):
 	#returns nodes, edges 
 
 #test
-# Get data from DVID Server
 if debug == True:
     selectedNodes = {}
     try:
