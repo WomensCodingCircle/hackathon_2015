@@ -30,15 +30,11 @@ def simple_view(request):
     my_template = 'hackathon_app/user_interface.html'
     return render(request,my_template,{'today':today},context_instance=RequestContext(request))
 
-
 def getNeuronNames():
     data_file = callDVID('names.json')
     NeuronNames = json.loads(data_file)
     NeuronNames.sort()
     return NeuronNames
-
-getNeuronNames()
-
 
 def processNeuronsRequest(request):
 	pass
