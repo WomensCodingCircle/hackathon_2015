@@ -103,11 +103,31 @@ def filterInputsOutputs(neuronIDs, inputsOutputs):
 
     return inputsOutputs
 	
-def getBodyIds(neuron, typeName):
-	pass
-	#satako
-	#contacts dvid
-	#returns list of ids corresponding to neuron or type name
+	
+def getBodyId(request):
+
+data = callDVID('names_to_body_id.json')
+dic = json.loads(data)
+
+if request :
+	## Look up Body Id and add to the list
+	lst = []
+	for type in request:
+		lst = lst + list(dic.get(type))
+		#print lst
+	if lst == []:
+		return None
+
+	set = set(lst) # Remove duplicated id
+	Newlst = list(set)
+
+	#print Newlst
+	return Newlst
+
+else:
+	return None
+	#print 'None'
+
 
 def generateEdgeList(listOfNeurons):
 	pass
