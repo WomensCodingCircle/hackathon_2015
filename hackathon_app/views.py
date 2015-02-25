@@ -1,6 +1,10 @@
-# from django.shortcuts import render
-#from django.utils import timezone
-#from django.template import RequestContext
+#debug flag. In production set debug="False"
+debug = True
+if debug == False:
+    from django.shortcuts import render
+    from django.utils import timezone
+    from django.template import RequestContext
+
 
 # imports
 import httplib
@@ -49,8 +53,7 @@ def processNeuronsRequest(request):
 #sample node list
 neuronIDList = ["16699", "18631", "22077", "31699", "50809"]
 
-#debug flag. In production set debug="False"
-debug = True
+
 
 #print json.dumps( dataset_details, indent=4 )
 
@@ -85,42 +88,35 @@ def filterInputsOutputs(neuronIDs, inputsOutputs):
         #filter input nodes
         thisInputs = thisNode.get("inputs")
         thisInputskey = thisInputs.keys()
-        print  item + ": Inputs all " + str(len(thisInputskey))
-        for inputNode in thisInputskey:
-            if (inputNode in neuronIDs):
-                continue
-            else:
-                del thisInputs[inputNode]
-        print  item + ": Inputs after filter " + str(len(thisInputs.keys()))
+        if debug == True:
+            print  item + ": Inputs all " + str(len(thisInputskey))
+            for inputNode in thisInputskey:
+                if (inputNode in neuronIDs):
+                    continue
+                else:
+                    del thisInputs[inputNode]
+        if debug == True:
+            print  item + ": Inputs after filter " + str(len(thisInputs.keys()))
 
          #filter input nodes
         thisOutputs = thisNode.get("outputs")
         thisOutputskey = thisOutputs.keys()
-        print  item + ": Outputs all " + str(len(thisOutputskey))
-        for outputNode in thisOutputskey:
-            if (outputNode in neuronIDs):
-                continue
-            else:
-                del thisOutputs[outputNode]
-        print  item + ": Outputs after filter " + str(len(thisOutputs.keys()))
+        if debug == True:
+            print  item + ": Outputs all " + str(len(thisOutputskey))
+            for outputNode in thisOutputskey:
+                if (outputNode in neuronIDs):
+                    continue
+                else:
+                    del thisOutputs[outputNode]
+        if debug == True:
+            print  item + ": Outputs after filter " + str(len(thisOutputs.keys()))
 
         #delete name
         del thisNode["name"]
 
     return inputsOutputs
 
-#test
-# Get data from DVID Server
 
-selectedNodes = {}
-try:
-    selectedNodes = getInputsOutputs(neuronIDList)
-except:
-    print "Unexpected error:", sys.exc_info()[0]
-
-trimmedInputsOutputs = filterInputsOutputs(neuronIDList, selectedNodes)
-
-print trimmedInputsOutputs
 	
 def getBodyIds(neuron, typeName):
 	pass
@@ -140,6 +136,16 @@ def combineOutputs(nodes, celltypes, edges, combinationType):
 	#combines nodes by cell type and calculates inputs and outputs base on combo type (mean, sum, etc.)
 	#returns nodes, edges 
 
- 
-	
+#test
+# Get data from DVID Server
+if debug == True:
+    selectedNodes = {}
+    try:
+        selectedNodes = getInputsOutputs(neuronIDList)
+    except:
+        print "Unexpected error:", sys.exc_info()[0]
+
+    trimmedInputsOutputs = filterInputsOutputs(neuronIDList, selectedNodes)
+
+    print trimmedInputsOutputs	
 
