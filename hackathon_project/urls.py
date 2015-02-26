@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from hackathon_app.views import getNeuronNames,simple_view
+from hackathon_app.views import getNeuronNames, simple_view, charlottes_view
 
 admin.autodiscover()
 
@@ -13,4 +13,5 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^user_interface/', 'hackathon_app.views.simple_view',name='simple_view'),
+    url(r'^charlotte/', 'hackathon_app.views.charlottes_view',name='charlotte'),
 )+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

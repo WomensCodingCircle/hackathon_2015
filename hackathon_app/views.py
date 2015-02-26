@@ -1,5 +1,5 @@
 #debug flag. In production set debug="False"
-debug = True
+debug = False
 if debug == False:
     from django.shortcuts import render
     from django.utils import timezone
@@ -30,6 +30,10 @@ def simple_view(request):
     my_template = 'hackathon_app/user_interface.html'
     my_data = getNeuronNames()
     return render(request,my_template,{'today':today,'data':my_data,},context_instance=RequestContext(request))
+
+def charlottes_view(request):
+    my_template = 'hackathon_app/svg.html'
+    return render(request, my_template, context_instance=RequestContext(request))
 
 def getNeuronNames():
     data_file = callDVID('names.json')
