@@ -1,6 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-{{today}}
+<script type="text/javascript">
+var neuron_names = [{% for neuron in data %}"{{neuron}}",{% endfor %}];
+</script>
 </br>
-This is where our form will go! 
+<div class='form-inline'>
+<div id="label_search"></div>
+</br></br>
+<label for="max">Max:</label>
+<input type="radio" name="my-checkbox" id="max">
+<label for="sum">Sum:</label>
+<input type="radio" name="my-checkbox" id="sum">
+<label for="mean">Mean:</label>
+<input type="radio" name="my-checkbox" id="mean">
+<label for="median">Median:</label>
+<input type="radio" name="my-checkbox" id="median">
+</br></br>
+<button id='label_submit' class="btn btn-primary" style="vertical-align:top">Search</button>
+</div>
 {% endblock %} 

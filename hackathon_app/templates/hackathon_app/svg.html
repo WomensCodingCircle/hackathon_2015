@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block svg %}
+<script type='text/javascript'>
+var dataset = {
+        neurons: [
+                {name: 'L1'},
+                {name: 'L2'},
+                {name: 'L3'}
+        ],
+        edges: [
+                {source: 0, target: 1, weight: 10},
+                {source: 0, target: 2, weight: 20},
+                {source: 1, target: 2, weight: 8},
+                {source: 2, target: 1, weight: 1}
+        ]
+};
+</script>
+<div id='nodeForm' class='pull-right'>
+	<form>
+		<div class='form-group'>
+		<label for='nodeSize'>Node Size: </label><input name='nodeSize' type='range' min=1 max=50 step=1 /><span id='nodeSizeValue'></span>
+		<div>
+		<div class='form-group'>
+		<label for='nodeColor'>Node Color: </label><input type='color' id='nodeColor' />
+		<div>
+		<div class='form-group'>
+		<label for='nodeFontSize'>Font Size: </label><input name='nodeFontSize' type='range' min=6 max=45 step=1 /><span id='nodeFontSizeValue'></span>
+		</div>
+	</form>
+</div>
+<script src="{% static 'hackathon_app/js/external/d3.js' %}"></script>
+<script src="{% static 'hackathon_app/js/graph_maker.js' %}"></script>
+{% endblock %} 

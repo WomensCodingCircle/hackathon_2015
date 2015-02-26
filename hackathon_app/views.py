@@ -1,5 +1,5 @@
 #debug flag. In production set debug="False"
-debug = True
+debug = False
 if debug == False:
     from django.shortcuts import render
     from django.utils import timezone
@@ -25,10 +25,15 @@ def callDVID(keyname):
     return kv.get_value(connection, uuid, dataname, keyname)
 
 def simple_view(request):
-    today = timezone.now()
+    today = "test"
     data_dictionary = {'today': today}
     my_template = 'hackathon_app/user_interface.html'
-    return render(request,my_template,{'today':today},context_instance=RequestContext(request))
+    my_data = getNeuronNames()
+    return render(request,my_template,{'today':today,'data':my_data,},context_instance=RequestContext(request))
+
+def charlottes_view(request):
+    my_template = 'hackathon_app/svg.html'
+    return render(request, my_template, context_instance=RequestContext(request))
 
 def getNeuronNames():
     data_file = callDVID('names.json')
@@ -139,17 +144,56 @@ def filterInputsOutputs(neuronIDs, inputsOutputs):
 
     return inputsOutputs
 	
-def getBodyIds(neuron, typeName):
-	pass
-	#satako
-	#contacts dvid
-	#returns list of ids corresponding to neuron or type name
+	
+def getBodyId(neuronNames):
+
+    data = callDVID('names_to_body_id.json')
+    dic = json.loads(data)
+
+    if neuronNames :
+        ## Look up Body Id and add to the list
+        lst = []
+        for name in neuronNames:
+            lst = lst + list(dic.get(name))
+            #print lst
+        if lst == []:
+            return None
+
+        nameSet = set(lst) # Remove duplicated id
+        Newlst = list(nameSet)
+
+        #print Newlst
+        return Newlst
+
+    else:
+        return None
+        #print 'None'
+
 
 def generateEdgeList(listOfNeurons):
 	pass
-	#lei-ann
-	#uses filterInputsOutputs and getBodyIds to generate a list of connections for svg
+	#uses filterInputsOutputs and getBodyIds to generate a list of
+    #connections for svg
 	#returns list of connections for svg
+    #key is the Id of the neuron of interest
+            
+        for key,value in listOfNeurons.items():
+                
+            #print key,value
+            node = listOfNeurons.get(key)
+                
+            #getting data from inputs dictionary
+            inputs = node.get("inputs")
+                
+            inconnections = [key, inputs]
+                
+            #getting data from outputs dictionary
+            outputs = node.get("outputs")
+                
+            outconnections = [key, outputs]
+            
+        return inconnections
+        return outconnections
 
 def combineOutputs(nodes, celltypes, edges, combinationType):
 	pass
