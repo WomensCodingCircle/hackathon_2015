@@ -37,7 +37,9 @@ def getNeuronNames():
     return NeuronNames
 
 def processNeuronsRequest(request):
-	pass
+	#test function
+	test=getInputsOutputs("16699")
+	return test
 	#request contains neuron names and ids
 	#generate list of body ids user is interested in (use getBodyIds)
 	#for each body id, call getInputsOutputs
