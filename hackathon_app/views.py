@@ -47,9 +47,23 @@ def processNeuronsRequest(request):
 	print "Neuron names:", getNeuronNames(), 
 	
 	#generate list of body ids user is interested in (use getBodyIds)
-	list_BodyId = getBodyId(neuronList)
+	list_BodyId = getBodyIdmacloaner-lm1:hackathon_app ngot$ git pull origin master
+remote: Counting objects: 35, done.
+remote: Compressing objects: 100% (18/18), done.
+remote: Total 35 (delta 8), reused 3 (delta 3), pack-reused 13
+Unpacking objects: 100% (35/35), done.
+From https://github.com/WomensCodingCircle/hackathon_2015
+ * branch            master     -> FETCH_HEAD
+   fea9dac..43381a4  master     -> origin/master
+Updating 5ca4a4a..43381a4
+error: Your local changes to the following files would be overwritten by merge:
+	hackathon_app/views.py
+Please, commit your changes or stash them before you can merge.
+Aborting
+macloaner-lm1:hackathon_app ngot$ 
+(neuronList,types)
 	print "Neuron IDs:", list_BodyId 
-	getInputsOutputs(ID_list)
+	print "ID list:", getInputsOutputs(ID_list)
 	#for each body id, call getInputsOutputs
 	#then call filterInputsOutputs to filter based on neuron list
 	
