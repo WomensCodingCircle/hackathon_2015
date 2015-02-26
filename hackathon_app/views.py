@@ -25,10 +25,11 @@ def callDVID(keyname):
     return kv.get_value(connection, uuid, dataname, keyname)
 
 def simple_view(request):
-    today = timezone.now()
+    today = "test"
     data_dictionary = {'today': today}
     my_template = 'hackathon_app/user_interface.html'
-    return render(request,my_template,{'today':today},context_instance=RequestContext(request))
+    my_data = getNeuronNames()
+    return render(request,my_template,{'today':today,'data':my_data,},context_instance=RequestContext(request))
 
 def getNeuronNames():
     data_file = callDVID('names.json')
