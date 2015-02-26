@@ -1,6 +1,13 @@
 from django.shortcuts import render
 from django.utils import timezone
 from django.template import RequestContext
+import httplib
+import json
+from os import path
+from glob import glob
+from pydvid import keyvalue as kv
+from pydvid import general
+
 
 # Create your views here.
 
@@ -10,8 +17,10 @@ def simple_view(request):
 	my_template = 'hackathon_app/user_interface.html'
 	return render(request,my_template,{'today':today},context_instance=RequestContext(request))
 
-def getNeuronNames():
-
+def getNeuronNames(request):
+	server = "hackathon.janelia.org"
+	uuid = '2a3'
+	dataname = 'codingcircle'
 	# Open a connection to DVID
 	connection = httplib.HTTPConnection(server, timeout=5.0)
 
@@ -19,9 +28,10 @@ def getNeuronNames():
 	keys = kv.get_keys(connection, uuid, dataname)
 
 	#read file 'names.jason'
+	my_template = 'hackathon_app/user_interface.html'
 	data_file = kv.get_value(connection, uuid, dataname, 'names.json')
 	NeuronNames = json.loads(data_file)
-	return NeuronNames
+	return render(request,my_template,{'NeuronNames':NeuronNames},context_instance=RequestContext(request))
 	
 def processNeuronsRequest(request):
 	pass
@@ -39,7 +49,7 @@ def getInputsOutputs(neuronID):
 	#contacts DVID
 	#returns all inputs and outputs from one neuron
 	
-def getBodyIds(neuron/typeName):
+def getBodyIds():
 	pass
 	#satako
 	#contacts dvid
