@@ -106,29 +106,29 @@ def filterInputsOutputs(neuronIDs, inputsOutputs):
     return inputsOutputs
 	
 	
-def getBodyId(request):
+def getBodyId(neuronNames):
 
-data = callDVID('names_to_body_id.json')
-dic = json.loads(data)
+    data = callDVID('names_to_body_id.json')
+    dic = json.loads(data)
 
-if request :
-	## Look up Body Id and add to the list
-	lst = []
-	for type in request:
-		lst = lst + list(dic.get(type))
-		#print lst
-	if lst == []:
-		return None
+    if neuronNames :
+        ## Look up Body Id and add to the list
+        lst = []
+        for name in neuronNames:
+            lst = lst + list(dic.get(name))
+            #print lst
+        if lst == []:
+            return None
 
-	set = set(lst) # Remove duplicated id
-	Newlst = list(set)
+        nameSet = set(lst) # Remove duplicated id
+        Newlst = list(nameSet)
 
-	#print Newlst
-	return Newlst
+        #print Newlst
+        return Newlst
 
-else:
-	return None
-	#print 'None'
+    else:
+        return None
+        #print 'None'
 
 
 def generateEdgeList(listOfNeurons):
