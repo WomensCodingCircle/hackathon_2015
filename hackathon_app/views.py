@@ -136,6 +136,25 @@ def generateEdgeList(listOfNeurons):
 	#lei-ann
 	#uses filterInputsOutputs and getBodyIds to generate a list of connections for svg
 	#returns list of connections for svg
+    #key is the Id of the neuron of interest
+            
+        for key,value in listOfNeurons.items():
+                
+            #print key,value
+            node = listOfNeurons.get(key)
+                
+            #getting data from inputs dictionary
+            inputs = node.get("inputs")
+                
+            inconnections = [key, inputs]
+                
+            #getting data from outputs dictionary
+            outputs = node.get("outputs")
+                
+            outconnections = [key, outputs]
+            
+        return inconnections
+        return outconnections
 
 def combineOutputs(nodes, celltypes, edges, combinationType):
 	pass
