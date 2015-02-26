@@ -133,8 +133,8 @@ def getBodyId(neuronNames):
 
 def generateEdgeList(listOfNeurons):
 	pass
-	#lei-ann
-	#uses filterInputsOutputs and getBodyIds to generate a list of connections for svg
+	#uses filterInputsOutputs and getBodyIds to generate a list of
+    #connections for svg
 	#returns list of connections for svg
     #key is the Id of the neuron of interest
             
