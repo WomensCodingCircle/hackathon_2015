@@ -70,6 +70,8 @@ def processNeuronsRequest(request):
 	print "connections:", generateEdgeList()
 	
 	#combineOutputs() based on what type of combination the user wants
+	print "edge list, operator types:", combineOutputs(edges, combotypes)
+	
 	#return json data for svg creation
 	
 	
