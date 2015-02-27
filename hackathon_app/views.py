@@ -42,15 +42,37 @@ def getNeuronNames():
 
 def processNeuronsRequest(request):
 	#test function
-	test=getInputsOutputs("16699")
-	return test
+	#test=getInputsOutputs("16699")
+	#return test
+	
+	neuronList = ["Tm9", "L3", "L2", "L4"]
+	
 	#request contains neuron names and ids
+	print "Neuron names:", getNeuronNames(), 
+	
 	#generate list of body ids user is interested in (use getBodyIds)
+	
+	list_BodyId = getBodyId(neuronList)
+	print "Neuron IDs:", list_BodyId 
+	
 	#for each body id, call getInputsOutputs
 	#then call filterInputsOutputs to filter based on neuron list
+	
+	for list_ID in list_BodyID:
+	    
+	    print "ID list:", getInputsOutputs(list_ID)
+	    
+	    print "Neuron Inputs-Outputs:", filterInputsOutputs(neuronList, list_ID)
+	
+	
 	#generateEdgeList()
+	
+	print generateEdgeList()
+	
+	
 	#combineOutputs() based on what type of combination the user wants
 	#return json data for svg creation
+	
 	
 #sample node list
 if debug == True:
