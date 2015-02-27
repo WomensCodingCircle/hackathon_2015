@@ -258,7 +258,7 @@ def doMath(integerList, operator):
         return numpy.mean(integerList).round()
     #average
     elif(operator == 'median'):
-        return numpy.average(integerList).round()
+        return numpy.median(integerList).round()
     else:
         print operator
 
