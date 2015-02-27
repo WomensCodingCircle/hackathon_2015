@@ -58,11 +58,10 @@ def processNeuronsRequest(request):
 	#for each body id, call getInputsOutputs
 	#then call filterInputsOutputs to filter based on neuron list
 	
-    getInOut = getInputsOutputs(list_BodyId)
-    print "ID list:", getInputsOutputs(list_BodyId)
-    
-    print "Neuron Inputs-Outputs:", filterInputsOutputs(neuronList, getInOut)
+	getInOut = getInputsOutputs(list_BodyId)
+	print "ID list:", getInputsOutputs(list_BodyId)
 	
+	print "Neuron Inputs-Outputs:", filterInputsOutputs(neuronList, getInOut)
 	
 	#generateEdgeList()
 	
