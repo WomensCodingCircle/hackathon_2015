@@ -52,18 +52,17 @@ def processNeuronsRequest(request):
 	print "Neuron names:", getNeuronNames(), 
 	
 	#generate list of body ids user is interested in (use getBodyIds)
-	list_BodyId = getBodyId(neuronList,types)
+	list_BodyId = getBodyId(neuronList)
 	print "Neuron IDs:", list_BodyId 
-	print "ID list:", getInputsOutputs(ID_list)
 	
 	#for each body id, call getInputsOutputs
 	#then call filterInputsOutputs to filter based on neuron list
 	
 	for list_ID in list_BodyID:
 	    
-	    print getInputsOutputs(list_ID)
+	    print "ID list:", getInputsOutputs(list_ID)
 	    
-	    print filterInputsOutputs(list_ID)
+	    print filterInputsOutputs(neuronList, list_ID)
 	
 	
 	#generateEdgeList()
