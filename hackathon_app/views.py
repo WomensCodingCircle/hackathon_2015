@@ -45,7 +45,7 @@ def processNeuronsRequest(request):
 	#test=getInputsOutputs("16699")
 	#return test
 	
-	neuronList = ["TM9", "L3", "L1", "L2", "L4"]
+	neuronList = ["Dm3", "C3", "Dm8", "Tm5a-B-ant"]
 	
 	#request contains neuron names and ids
 	print "Neuron names:", getNeuronNames(), 
@@ -58,11 +58,11 @@ def processNeuronsRequest(request):
 	#for each body id, call getInputsOutputs
 	#then call filterInputsOutputs to filter based on neuron list
 	
-	for list_ID in list_BodyID:
-	    
-	    print "ID list:", getInputsOutputs(list_ID)
-	    
-	    print "Neuron Inputs-Outputs:", filterInputsOutputs(neuronList, list_ID)
+    
+    getInOut = getInputsOutputs(list_BodyId)
+    print "ID list:", getInputsOutputs(list_BodyId)
+    
+    print "Neuron Inputs-Outputs:", filterInputsOutputs(neuronList, getInOut)
 	
 	
 	#generateEdgeList()
@@ -134,10 +134,9 @@ def filterInputsOutputs(neuronIDs, inputsOutputs):
 	
 	
 def getBodyId(neuronNames):
-
+    print neuronNames
     data = callDVID('names_to_body_id.json')
     dic = json.loads(data)
-
     if neuronNames :
         ## Look up Body Id and add to the list
         lst = []
@@ -277,16 +276,4 @@ def neuronID2NeuronType (idTuple, neuronsinfoJson):
     return (targetType, sourceType)
 
 
-
-#test
-if debug == True:
-    selectedNodes = {}
-    try:
-        selectedNodes = getInputsOutputs(neuronIDList)
-    except:
-        print "Unexpected error:", sys.exc_info()[0]
-
-    trimmedInputsOutputs = filterInputsOutputs(neuronIDList, selectedNodes)
-
-    print trimmedInputsOutputs	
 
