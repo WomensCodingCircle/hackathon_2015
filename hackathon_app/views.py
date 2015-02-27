@@ -46,12 +46,13 @@ def processNeuronsRequest(request):
 	#test=getInputsOutputs("16699")
 	#return test
 	
-	neuronList = ["Tm3", "L1"]
+	neuronList = ["Tm9", "L3", "L2", "L4"]
 	
 	#request contains neuron names and ids
 	print "Neuron names:", getNeuronNames(), 
 	
 	#generate list of body ids user is interested in (use getBodyIds)
+	
 	list_BodyId = getBodyId(neuronList)
 	print "Neuron IDs:", list_BodyId 
 	
@@ -62,7 +63,7 @@ def processNeuronsRequest(request):
 	    
 	    print "ID list:", getInputsOutputs(list_ID)
 	    
-	    print filterInputsOutputs(neuronList, list_ID)
+	    print "Neuron Inputs-Outputs:", filterInputsOutputs(neuronList, list_ID)
 	
 	
 	#generateEdgeList()
