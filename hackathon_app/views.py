@@ -65,7 +65,8 @@ def processNeuronsRequest(request):
 	
 	#generateEdgeList()
 	
-	print "connections:", generateEdgeList(connections)
+	print "connections:", generateEdgeList(getInOut)
+	
 	
 	#combineOutputs() based on what type of combination the user wants
 	print "edge list, operator types:", combineOutputs(edges, combotypes)
