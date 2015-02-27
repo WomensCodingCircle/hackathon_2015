@@ -68,7 +68,8 @@ def processNeuronsRequest(request):
 	
 	#generateEdgeList()
 	
-	edgelist = generateEdgeList(filterInOut)
+	#edgelist = generateEdgeList(filterInOut)
+	edgelist = generateEdgeList(list_BodyId)
 	
 	print "connections:", edgelist
 	
