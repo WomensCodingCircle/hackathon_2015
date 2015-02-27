@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block content %}
+{% load staticfiles %}
+{% block form %}
 <script type="text/javascript">
 var neuron_names = [{% for neuron in data %}"{{neuron}}",{% endfor %}];
 </script>
@@ -18,4 +19,5 @@ var neuron_names = [{% for neuron in data %}"{{neuron}}",{% endfor %}];
 </br></br>
 <button id='label_submit' class="btn btn-primary" style="vertical-align:top">Search</button>
 </div>
+<script src="{% static "hackathon_app/js/hackathon_app.js" %}"></script>
 {% endblock %} 

@@ -1,5 +1,5 @@
 #debug flag. In production set debug="False"
-debug = False
+debug = True
 if debug == False:
     from django.shortcuts import render
     from django.utils import timezone
@@ -13,10 +13,9 @@ from glob import glob
 from pydvid import keyvalue as kv
 from pydvid import general
 
-def callDVID(keyname):
+def callDVID(keyname, dataname='codingcircle'):
     server = "hackathon.janelia.org"
     uuid = '2a3'
-    dataname = 'codingcircle'
     connection = httplib.HTTPConnection(server, timeout=30.0)
     keys = kv.get_keys(connection, uuid, dataname)
     if keyname not in keys:
@@ -137,34 +136,124 @@ def getBodyId(neuronNames):
 
 
 def generateEdgeList(listOfNeurons):
-	pass
-	#uses filterInputsOutputs and getBodyIds to generate a list of
-    #connections for svg
-	#returns list of connections for svg
-    #key is the Id of the neuron of interest
-            
-        for key,value in listOfNeurons.items():
-                
-            #print key,value
-            node = listOfNeurons.get(key)
-                
-            #getting data from inputs dictionary
-            inputs = node.get("inputs")
-                
-            inconnections = [key, inputs]
-                
-            #getting data from outputs dictionary
-            outputs = node.get("outputs")
-                
-            outconnections = [key, outputs]
-            
-        return inconnections
-        return outconnections
+    #lei-ann
+    #uses filterInputsOutputs to generate a list of connections for svg
+    #per Charlott:  only use inputs edges in each node to avoid double counting
+    #returns list of connections for svg
 
-def combineOutputs(nodes, celltypes, edges, combinationType):
-	pass
+    #return a dict object consists of data structure
+    #key = (thisNodeID-on-input-List, anotherNodeID-has-input-to-thisNode)#valuse{"destination": thisNodeID-on-input-List, "source": anotherNodeID-has-input-to-thisNode, "strength": inputStrength}
+
+    inconnections = {}
+
+    nodeIDs = listOfNeurons.keys()
+
+    for nodeId in nodeIDs:
+        node = listOfNeurons.get(nodeId)
+        inputs = node.get("inputs")
+
+        inputKeys = inputs.keys()
+
+        for inputKey in inputKeys:
+
+            strength = inputs.get(inputKey)
+            if (strength > 0):
+                idTuple = (nodeId, inputKey)
+                edgeData = {"destination": nodeId, "source": inputKey, "strength": strength}
+                inconnections[idTuple] = edgeData
+
+
+    return inconnections
+
+def combineOutputs(edgeList, combinationType):
 	#combines nodes by cell type and calculates inputs and outputs base on combo type (mean, sum, etc.)
 	#returns nodes, edges 
+    #Ying Wu
+    #new combinedOutouts for returning to caller (UI)
+    combinedOutputs = {}
+
+    #keys of input edgeList, in this list every element is unique, eg [("50809", "22077"), ("50809", "16699")]
+    idTupleList = edgeList.keys()
+
+    #paraell array for Neuron Type Tuples, in this list elements are not unique eg [('TM3', 'LD5'), ('TM3', 'LD5')]
+    typeTupleList = []
+    neuronsinfoJson = callDVID('neuronsinfo.json', 'graphdata')
+
+    for idTuple in idTupleList:
+        #convert ID tuple to Type tuple
+        typeTuple = neuronID2NeuronType(idTuple, neuronsinfoJson)
+        #add typeTuple to typeTupleList
+        typeTupleList.append(typeTuple)
+
+
+
+    #combine output by cell type
+    #build dictionary key=typeTuple, value = [strengths]
+    for index, item in enumerate(typeTupleList):
+        strength = edgeList.get(idTupleList[index]).get("strength")
+        if item in combinedOutputs.keys():
+            strength = edgeList.get(idTupleList[index]).get("strength")
+            combinedOutputs.get(item).append(strength)
+        else:
+            #add an entry to combinedOutputs:  key=typeTuple, object = list of one strength
+            combinedOutputs[item] = [strength]
+
+    #now we have a new dictionary
+    # key: cell type tuple,  value: strengths for this cell tuple in a list
+
+    if(debug):
+        print "before combine strength"
+        print combinedOutputs
+
+    # do math to combine strengths
+
+    for item in combinedOutputs.keys():
+        stregthList = combinedOutputs.get(item)
+        strengthCombined = doMath(stregthList, combinationType)
+        combinedDict = {"destination":item[0], "source":item[1], "strength":strengthCombined}
+        combinedOutputs[item] = combinedDict
+
+    if(debug):
+        print "after combine strength"
+        print combinedOutputs
+
+    return combinedOutputs
+
+
+def doMath(integerList, operator):
+    #combine Strength of multiple egdes
+    #input integer list,  operator
+    #return integer
+    #Ying Wu
+    operators = ['sum', 'max', 'mean', 'average']
+    if len(integerList) == 1:
+        return integerList[0]
+
+    #sum
+    if(operator == operators[0]):
+        return numpy.sum(integerList)
+
+    #max
+    if(operator == operators[1]):
+        return numpy.max(integerList)
+
+    #mean
+    if(operator == operators[2]):
+        return numpy.mean(integerList).round()
+
+    #average
+    if(operator == operators[3]):
+        return numpy.average(integerList).round()
+
+def neuronID2NeuronType (idTuple, neuronsinfoJson):
+    #Ying Wu
+    targetID = idTuple[0]
+    targetType = getNeuronType(targetID, neuronsinfoJson)
+    sourceID = idTuple[1]
+    sourceType = getNeuronType(sourceID, neuronsinfoJson)
+    return (targetType, sourceType)
+
+
 
 #test
 if debug == True:
