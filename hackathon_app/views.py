@@ -55,6 +55,7 @@ def processNeuronsRequest(request):
 	list_BodyId = getBodyId(neuronList,types)
 	print "Neuron IDs:", list_BodyId 
 	print "ID list:", getInputsOutputs(ID_list)
+	
 	#for each body id, call getInputsOutputs
 	#then call filterInputsOutputs to filter based on neuron list
 	
