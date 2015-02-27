@@ -1,23 +1,69 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block form %}
+<script src="{% static "hackathon_app/js/external/d3.js" %}"></script>
+{% if renderSvg %}
+<script src="{% static "hackathon_app/js/graph_maker.js" %}"></script>
+{% endif %}
+<script src="{% static "hackathon_app/js/hackathon_app.js" %}"></script>
+<div class='row'>
 <script type="text/javascript">
-var neuron_names = [{% for neuron in data %}"{{neuron}}",{% endfor %}];
+var neuron_names = [{% for neuron in neurons %}"{{neuron}}",{% endfor %}];
 </script>
+<div class='col-md-3'>
 </br>
-<div class='form-inline'>
-<div id="label_search"></div>
+<form class='form-inline' method='POST' action='/clotho/'>
+{% csrf_token %}
+<input id="label_search">
 </br></br>
 <label for="max">Max:</label>
-<input type="radio" name="my-checkbox" id="max">
+<input type="radio" name="combotype" id="max" value='max'>
 <label for="sum">Sum:</label>
-<input type="radio" name="my-checkbox" id="sum">
+<input type="radio" name="combotype" id="sum" value='sum'>
 <label for="mean">Mean:</label>
-<input type="radio" name="my-checkbox" id="mean">
+<input type="radio" name="combotype" id="mean" value='mean'>
 <label for="median">Median:</label>
-<input type="radio" name="my-checkbox" id="median">
+<input type="radio" name="combotype" id="median" value='median'>
 </br></br>
 <button id='label_submit' class="btn btn-primary" style="vertical-align:top">Search</button>
+</form>
 </div>
-<script src="{% static "hackathon_app/js/hackathon_app.js" %}"></script>
+
+{% endblock %} 
+{% block svg %}
+{% if renderSvg %}
+<script type='text/javascript'>
+var dataset = {
+        neurons: [
+        	{% for n in nodes %}
+                {name: '{{n}}'},
+            {% endfor %}
+        ],
+        edges: [
+        	{% for k,e in edges.items %}
+        	{source: {{e.source}}, target: {{e.destination}}, weight: {{e.strength}}},
+        	{% endfor %}
+        ]
+};
+</script>
+<div id='svgContainer' class='col-md-7'>
+</div>
+<div id='nodeForm' class='col-md-2'>
+	<form>
+		<div class='form-group'>
+			<label for='nodeSize'>Node Size</label><br>
+			<input id='nodeSize' type='range' min=1 max=50 step=1 /><span id='nodeSizeValue'></span>
+		</div>
+		<div class='form-group'>
+			<label for='nodeColor'>Node Color</label><br>
+			<input type='color' id='nodeColor' />
+		</div>
+		<div class='form-group'>
+			<label for='nodeFontSize'>Font Size</label><br>
+			<input id='nodeFontSize' type='range' min=6 max=45 step=1 /><span id='nodeFontSizeValue'></span>
+		</div>
+	</form>
+</div>
+</div>
+{% endif %}
 {% endblock %} 

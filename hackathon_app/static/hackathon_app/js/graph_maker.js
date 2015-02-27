@@ -1,4 +1,4 @@
-ar elementOfInterest;
+var elementOfInterest;
 $( document ).ready(function() {
 $('#nodeForm').hide();
 var width = 500,
@@ -15,7 +15,7 @@ var force = d3.layout.force()
     .on("tick", tick)
     .start();
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#svgContainer").append("svg")
     .attr("width", width)
     .attr("height", height);
 
@@ -105,6 +105,21 @@ function populateNodeForm(el){
 	var jqueryEl = $('#' + el.id);
 	var textEl = $('#' + el.id + 'text');
 	$('#nodeSizeValue').text(jqueryEl.attr('r'));
+  $('#nodeFontSizeValue').text('10');
 }
+$("#nodeSize").change(function(){
+  var jqueryEl = $('#' + elementOfInterest.id);
+  jqueryEl.attr('r', $("#nodeSize").val());
+  $('#nodeSizeValue').text($('#nodeSize').val());
+});
+$("#nodeColor").change(function(){
+  var jqueryEl = $('#' + elementOfInterest.id);
+  jqueryEl.css('fill', $("#nodeColor").val());
+});
+$("#nodeFontSize").change(function(){
+  var jqueryEl = $('#' + elementOfInterest.id + "text");
+  jqueryEl.css('font-size', $("#nodeFontSize").val() + "px");
+  $('#nodeFontSizeValue').text($('#nodeFontSize').val());
+});
 
 });
