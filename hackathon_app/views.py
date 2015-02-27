@@ -87,8 +87,6 @@ def processNeuronsRequest(neuronList, comboType):
     (combined, types) = combineOutputs(uncombinedOutputs, comboType)
     return combined, types
 
-	
-	
 #sample node list
 if debug == True:
     neuronIDList = ["16699", "18631", "22077", "31699", "50809"]
@@ -286,5 +284,4 @@ def getNeuronType (bodyID, neuronsinfoJson):
         neuronType = bodyID
 
     return neuronType
-
 
