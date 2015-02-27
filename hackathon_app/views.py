@@ -61,15 +61,20 @@ def processNeuronsRequest(request):
 	getInOut = getInputsOutputs(list_BodyId)
 	print "ID list:", getInputsOutputs(list_BodyId)
 	
-	print "Neuron Inputs-Outputs:", filterInputsOutputs(neuronList, getInOut)
+	filterInOut = filterInputsOutputs(neuronList, getInOut)
+	print "Neuron Inputs-Outputs:", filterInOut
+	
+	#print "Neuron Inputs-Outputs:", filterInputsOutputs(neuronList, getInOut)
 	
 	#generateEdgeList()
 	
-	print "connections:", generateEdgeList(getInOut)
+	edgelist = generateEdgeList(filterInOut)
+	
+	print "connections:", edgelist
 	
 	
 	#combineOutputs() based on what type of combination the user wants
-	print "edge list, operator types:", combineOutputs(edges, combotypes)
+	print "edge list, operator types:", combineOutputs(edgelist, combotypes)
 	
 	#return json data for svg creation
 	
