@@ -45,7 +45,7 @@ def processNeuronsRequest(request):
 	#test=getInputsOutputs("16699")
 	#return test
 	
-	neuronList = ["Tm9", "L3", "L2", "L4"]
+	neuronList = ["TM9", "L3", "L1", "L2", "L4"]
 	
 	#request contains neuron names and ids
 	print "Neuron names:", getNeuronNames(), 
@@ -67,8 +67,7 @@ def processNeuronsRequest(request):
 	
 	#generateEdgeList()
 	
-	print generateEdgeList()
-	
+	print "connections:", generateEdgeList()
 	
 	#combineOutputs() based on what type of combination the user wants
 	#return json data for svg creation
