@@ -15,7 +15,7 @@ from pydvid import general
 import numpy
 
 def callDVID(keyname, dataname='codingcircle'):
-    server = "hackathon.janelia.org"
+    server = "emrecon100.janelia.priv"
     uuid = '2a3'
     connection = httplib.HTTPConnection(server, timeout=30.0)
     keys = kv.get_keys(connection, uuid, dataname)
