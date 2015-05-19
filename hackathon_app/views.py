@@ -1,41 +1,39 @@
-#debug flag. In production set debug="False"
-debug = False
-if debug == False:
-    from django.shortcuts import render
-    from django.utils import timezone
-    from django.template import RequestContext
+from django.shortcuts import render
+from django.utils import timezone
+from django.template import RequestContext
 
 # imports
 import httplib
 import json
-from os import path
+import os
 from glob import glob
 from pydvid import keyvalue as kv
 from pydvid import general
 import numpy
 
-def callDVID(keyname, dataname='codingcircle'):
-    server = "emrecon100.janelia.priv"
-    uuid = '2a3'
-    connection = httplib.HTTPConnection(server, timeout=30.0)
-    keys = kv.get_keys(connection, uuid, dataname)
-    if keyname not in keys:
-        print "Invalid key", keyname
-        return None
-    return kv.get_value(connection, uuid, dataname, keyname)
+server = "emrecon100.janelia.priv"
+port = 8000
+#connection = httplib.HTTPConnection(server, timeout=5.0)
 
-def simple_view(request):
-    today = "test"
-    data_dictionary = {'today': today}
-    my_template = 'hackathon_app/user_interface.html'
-    my_data = getNeuronNames()
-    return render(request,my_template,{'today':today,'data':my_data,},context_instance=RequestContext(request))
+#def callDVID(keyname, dataname='emcircuit'):
+#    uuid = '2a3'
+#    return kv.get_value(connection, uuid, dataname, keyname)
 
-def charlottes_view(request):
-    my_template = 'hackathon_app/user_interface.html'
-    my_data = getNeuronNames()
-    return render(request, my_template, {'data':my_data}, context_instance=RequestContext(request))
 
+def callDVID(keyname, dataname='emcircuit'):
+	data = ''
+	if dataname == 'emcircuit':
+		fi = open(os.path.join('hackathon_app',keyname))
+		data = fi.read()
+		fi.close()
+	elif dataname == 'emcircuitIO':
+		fi = open(os.path.join('hackathon_app','inputs_outputs.json'))
+		d = json.load(fi)
+		fi.close()
+		data = json.dumps(d[str(keyname)])
+	return data
+	
+	
 def clothoView(request):
     my_template = 'hackathon_app/user_interface.html'
     neuronList = getNeuronNames()
@@ -44,11 +42,9 @@ def clothoView(request):
     renderSvg = False
     if request.POST:
         reqVars = dict(request.POST.iterlists())
-        neuronSearch = ["Tm9", "L3", "L2", "L4"]
         comboType = reqVars['combotype']
         neuronSearch = reqVars['neurons[]']
-        #TODO replace values with values from request
-        (combined, types) = processNeuronsRequest(neuronSearch, comboType[0])
+        (combined, types) = processNeuronsRequest(neuronList, neuronSearch, comboType[0])
         renderSvg = True
     data = {
         'neurons' : neuronList,
@@ -56,7 +52,6 @@ def clothoView(request):
         'edges': combined,
         'nodes': types
     }
-    print data['edges']
     return render(request, my_template, data, context_instance=RequestContext(request))
 
 
@@ -66,39 +61,30 @@ def getNeuronNames():
     NeuronNames.sort()
     return NeuronNames
 
-def processNeuronsRequest(neuronList, comboType):
-    #test function
-    #test=getInputsOutputs("16699")
-    #return test
-    #neuronList = ["Tm9", "L3", "L2", "L4"]
-    #request contains neuron names and ids
-    neuronNames = getNeuronNames() 
-    #generate list of body ids user is interested in (use getBodyIds)
-    #TODO replace with request.neuronList
+def processNeuronsRequest(neuronNames, neuronList, comboType):
     list_BodyId = getBodyId(neuronList)
-    if debug:
-        print "Neuron IDs:", list_BodyId 
     #for each body id, call getInputsOutputs
     #then call filterInputsOutputs to filter based on neuron list
     allIOs = getInputsOutputs(list_BodyId)
+    print allIOs
     filteredIOs = filterInputsOutputs(list_BodyId, allIOs)
     uncombinedOutputs = generateEdgeList(filteredIOs)
     #TODO replace sum with user selection from form
     (combined, types) = combineOutputs(uncombinedOutputs, comboType)
+    print "combined", combined
     return combined, types
 
-#sample node list
-if debug == True:
-    neuronIDList = ["16699", "18631", "22077", "31699", "50809"]
 
 def getInputsOutputs(neuronIDList):
-    inputs_outputs = callDVID('inputs_output.json')
-    in_out_dict = json.loads(inputs_outputs)
     #select neurons neuronIDList, puts them in a new dictionary, and return the dictionary to caller
     selected_nodes = {}
     for key in neuronIDList:
-        thisNode = in_out_dict.get(key)
-        selected_nodes[key] = thisNode
+	try:
+		thisNode = callDVID(int(key), dataname='emcircuitIO')
+		thisNode = json.loads(thisNode) 
+		selected_nodes[key] = thisNode
+	except:
+		selected_nodes[key] = {'inputs': {}, 'outputs': {}}
     return selected_nodes
 
 def filterInputsOutputs(neuronIDs, inputsOutputs):
@@ -109,33 +95,24 @@ def filterInputsOutputs(neuronIDs, inputsOutputs):
 
     nodeIDs = inputsOutputs.keys();
     for item in nodeIDs:
-        thisNode = inputsOutputs.get(item)
+        thisNode = inputsOutputs[item]
 
         #filter input nodes
-        thisInputs = thisNode.get("inputs")
+        thisInputs = thisNode["inputs"]
         thisInputskey = thisInputs.keys()
-
         for inputNode in thisInputskey:
-            if (inputNode in neuronIDs):
+            if (int(inputNode) in neuronIDs):
                 continue
             else:
                 del thisInputs[inputNode]
-        if debug == True:
-            print  item + ": Inputs after filter " + str(len(thisInputs.keys()))
         #filter input nodes
-        thisOutputs = thisNode.get("outputs")
+        thisOutputs = thisNode["outputs"]
         thisOutputskey = thisOutputs.keys()
-        if debug == True:
-            print  item + ": Outputs all " + str(len(thisOutputskey))
         for outputNode in thisOutputskey:
-            if (outputNode in neuronIDs):
+            if (int(outputNode) in neuronIDs):
                 continue
             else:
                 del thisOutputs[outputNode]
-        if debug == True:
-            print  item + ": Outputs after filter " + str(len(thisOutputs.keys()))
-        #delete name
-        del thisNode["name"]
     return inputsOutputs
 	
 	
@@ -147,16 +124,13 @@ def getBodyId(neuronNames):
         lst = []
         for name in neuronNames:
             lst = lst + list(dic.get(name))
-            #print lst
         if lst == []:
             return None
         nameSet = set(lst) # Remove duplicated id
         Newlst = list(nameSet)
-        #print Newlst
         return Newlst
     else:
         return None
-        #print 'None'
 
 
 def generateEdgeList(listOfNeurons):
@@ -182,8 +156,8 @@ def generateEdgeList(listOfNeurons):
     return inconnections
 
 def combineOutputs(edgeList, combinationType):
-	#combines nodes by cell type and calculates inputs and outputs base on combo type (mean, sum, etc.)
-	#returns nodes, edges 
+    #combines nodes by cell type and calculates inputs and outputs base on combo type (mean, sum, etc.)
+    #returns nodes, edges 
     #Ying Wu
     #new combinedOutputs for returning to caller (UI)
     combinedOutputs = {}
@@ -191,34 +165,30 @@ def combineOutputs(edgeList, combinationType):
     idTupleList = edgeList.keys()
     #paraell array for Neuron Type Tuples, in this list elements are not unique eg [('TM3', 'LD5'), ('TM3', 'LD5')]
     typeTupleList = []
-    neuronsinfoJson = json.loads(callDVID('neuronsinfo.json', 'graphdata'))
-    #print neuronsinfoJson
+    bodyIdToType = json.loads(callDVID('body_id_to_type.json'))
     for idTuple in idTupleList:
         #convert ID tuple to Type tuple
-        typeTuple = neuronID2NeuronType(idTuple, neuronsinfoJson)
+        typeTuple = ( idToType(idTuple[0], bodyIdToType), idToType(idTuple[1], bodyIdToType))
         #add typeTuple to typeTupleList
         typeTupleList.append(typeTuple)
     #combine output by cell type
     #build dictionary key=typeTuple, value = [strengths]
     for index, item in enumerate(typeTupleList):
-        strength = edgeList.get(idTupleList[index]).get("strength")
-        if item in combinedOutputs.keys():
-            strength = edgeList.get(idTupleList[index]).get("strength")
-            combinedOutputs.get(item).append(strength)
+        strength = edgeList[idTupleList[index]]["strength"]
+        if item in combinedOutputs:
+            strength = edgeList[idTupleList[index]]["strength"]
+            combinedOutputs[item].append(strength)
         else:
             #add an entry to combinedOutputs:  key=typeTuple, object = list of one strength
             combinedOutputs[item] = [strength]
     #now we have a new dictionary
     # key: cell type tuple,  value: strengths for this cell tuple in a list
-    if(debug):
-        print "before combine strength"
-        print combinedOutputs
     # do math to combine strengths
     types = set()
     for item in combinedOutputs.keys():
         types.add(item[0])
         types.add(item[1])
-        stregthList = combinedOutputs.get(item)
+        stregthList = combinedOutputs[item]
         strengthCombined = doMath(stregthList, combinationType)
         if strengthCombined:
             combinedDict = {"destination":item[0], "source":item[1], "strength":strengthCombined}
@@ -232,9 +202,6 @@ def combineOutputs(edgeList, combinationType):
     for item in combinedOutputs.keys():
         combinedOutputs[item]['destination'] = types.index(combinedOutputs[item]['destination'])
         combinedOutputs[item]['source'] = types.index(combinedOutputs[item]['source'])
-    if(debug):
-        print "after combine strength"
-        print combinedOutputs
 
     return combinedOutputs, types
 
@@ -262,26 +229,9 @@ def doMath(integerList, operator):
     else:
         print operator
 
-def neuronID2NeuronType (idTuple, neuronsinfoJson):
-    #Ying Wu
-    targetID = idTuple[0]
-    targetType = getNeuronType(targetID, neuronsinfoJson)
-    sourceID = idTuple[1]
-    sourceType = getNeuronType(sourceID, neuronsinfoJson)
-    return (targetType, sourceType)
-
-def getNeuronType (bodyID, neuronsinfoJson):
-    # look up neuron type by neuron body ID
-    # reruns neuron type.  If neuron type is not found, use body ID as neuron name
-    #Ying Wu
-    neuronType = ''
-    if str(bodyID) in neuronsinfoJson:
-        neuronInfo = neuronsinfoJson[str(bodyID)]
-        neuronType = neuronInfo.get("Type")
-        if (len(neuronType) == 0):
-            neuronType = bodyID
-    else:
-        neuronType = bodyID
-
-    return neuronType
+def idToType(id, typeDict):
+        id = str(id)
+	if id in typeDict:
+		return typeDict[id]
+	return id
 

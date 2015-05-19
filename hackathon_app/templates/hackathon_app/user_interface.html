@@ -12,19 +12,29 @@ var neuron_names = [{% for neuron in neurons %}"{{neuron}}",{% endfor %}];
 </script>
 <div class='col-md-3'>
 </br>
-<form class='form-inline' method='POST' action='/clotho/'>
+<form  method='POST' action='/clotho/'>
 {% csrf_token %}
+<label for='label_search'>Cell Types</label>
 <input id="label_search">
-</br></br>
-<label for="max">Max:</label>
+</br>
+<label>Combination Type</label>
+<div class="radio">
+<label for="max">Max</label>
 <input type="radio" name="combotype" id="max" value='max'>
-<label for="sum">Sum:</label>
+</div>
+<div class="radio">
+<label for="sum">Sum</label>
 <input type="radio" name="combotype" id="sum" value='sum'>
-<label for="mean">Mean:</label>
+</div>
+<div class="radio">
+<label for="mean">Mean</label>
 <input type="radio" name="combotype" id="mean" checked='checked' value='mean'>
-<label for="median">Median:</label>
+</div>
+<div class="radio">
+<label for="median">Median</label>
 <input type="radio" name="combotype" id="median" value='median'>
-</br></br>
+</div>
+</br>
 <button id='label_submit' class="btn btn-primary" style="vertical-align:top">Search</button>
 </form>
 </div>
