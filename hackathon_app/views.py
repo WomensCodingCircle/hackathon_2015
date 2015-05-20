@@ -13,25 +13,25 @@ import numpy
 
 server = "emrecon100.janelia.priv"
 port = 8000
-#connection = httplib.HTTPConnection(server, timeout=5.0)
-
-#def callDVID(keyname, dataname='emcircuit'):
-#    uuid = '2a3'
-#    return kv.get_value(connection, uuid, dataname, keyname)
-
+connection = httplib.HTTPConnection(server, timeout=5.0)
 
 def callDVID(keyname, dataname='emcircuit'):
-	data = ''
-	if dataname == 'emcircuit':
-		fi = open(os.path.join('hackathon_app',keyname))
-		data = fi.read()
-		fi.close()
-	elif dataname == 'emcircuitIO':
-		fi = open(os.path.join('hackathon_app','inputs_outputs.json'))
-		d = json.load(fi)
-		fi.close()
-		data = json.dumps(d[str(keyname)])
-	return data
+   uuid = '2a3'
+   return kv.get_value(connection, uuid, dataname, keyname)
+
+
+# def callDVID(keyname, dataname='emcircuit'):
+# 	data = ''
+# 	if dataname == 'emcircuit':
+# 		fi = open(os.path.join('hackathon_app',keyname))
+# 		data = fi.read()
+# 		fi.close()
+# 	elif dataname == 'emcircuitIO':
+# 		fi = open(os.path.join('hackathon_app','inputs_outputs.json'))
+# 		d = json.load(fi)
+# 		fi.close()
+# 		data = json.dumps(d[str(keyname)])
+# 	return data
 	
 	
 def clothoView(request):
